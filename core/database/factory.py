@@ -16,7 +16,7 @@ from core.database.models import Base
 
 dsn = os.getenv("DATABASE_URL")
 if not dsn:
-    raise RuntimeError("DATABASE_URL не установлена в переменных окружения!")
+    raise RuntimeError(f"DATABASE_URL не установлена в переменных окружения!, {dsn}")
 
 # Заменяем старый формат на async совместимый
 if dsn.startswith("postgres://"):
