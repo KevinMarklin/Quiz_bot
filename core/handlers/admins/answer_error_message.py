@@ -1,11 +1,21 @@
+import toml
 from aiogram import Router, F, Bot
 from aiogram.types import Message
 import re
 
 router = Router()
 
+config = toml.load('config.toml')
+ADMIN_IDS = [config["support"]["id1"]]
+
+
 @router.message(F.reply_to_message)
 async def handle_reply_to_user(message: Message, bot: Bot):
+
+    user_id = message.from_user.id
+    if user_id not in ADMIN_IDS:
+        return
+
     original_text = message.reply_to_message.text
 
     # Извлекаем ID из оригинального сообщения
