@@ -1,15 +1,12 @@
 import toml
-from aiogram import Router, F
-from aiogram.fsm.context import FSMContext
-from aiogram.fsm.state import StatesGroup, State
-from aiogram.types import CallbackQuery, Message
+
+from aiogram import Router
+from aiogram.types import Message
 from aiogram.filters import Command
 from sqlalchemy.ext.asyncio import AsyncSession
-
 from core.database.orm_query import all_users
-from core.states.admin import Admin
-from core.keyboards.ban_messages_user import admin_lock_kb
-from lock_state import is_locked, set_locked
+
+
 router = Router()
 
 config = toml.load('config.toml')

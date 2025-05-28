@@ -1,11 +1,10 @@
 import toml
 from aiogram import Router, F, Bot
 from aiogram.fsm.context import FSMContext
-from aiogram.types import Message, CallbackQuery, ReplyKeyboardRemove
+from aiogram.types import Message
 from aiogram.filters import Command
 from sqlalchemy.ext.asyncio import AsyncSession
 from core.keyboards.back import back_menu
-import re
 from core.states.support import Error
 
 router = Router()

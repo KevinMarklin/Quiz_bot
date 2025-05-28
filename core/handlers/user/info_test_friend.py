@@ -1,17 +1,12 @@
 from aiogram import Router, F
 from aiogram.fsm.context import FSMContext
-from aiogram.types import Message, CallbackQuery, ReplyKeyboardRemove
-from aiogram.filters import Command, StateFilter
+from aiogram.types import Message
+from aiogram.filters import Command
 from sqlalchemy.ext.asyncio import AsyncSession
-import toml
+from core.database.orm_query import look_user_quiz, result_user_passed
 
-
-
-from core.database.orm_query import add_user_profile, look_user_quiz, result_user_passed
-from core.keyboards.begin_opros import begin_opros
 from core.keyboards.reverse_messages import creat_test_friend
-from core.keyboards.start import main_menu
-from core.utils.decoding_id import decrypt_user_id
+
 
 router = Router()
 

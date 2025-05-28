@@ -1,6 +1,6 @@
-import l10n
+
 from aiogram.utils.keyboard import InlineKeyboardBuilder
-from aiogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 
 def choice_donate():

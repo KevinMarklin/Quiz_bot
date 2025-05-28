@@ -2,15 +2,14 @@ import toml
 import re
 from aiogram import Router, F, Bot
 from aiogram.enums import ContentType
-from aiogram.exceptions import TelegramBadRequest
 from aiogram.fsm.context import FSMContext
-from aiogram.types import Message, CallbackQuery, ReplyKeyboardRemove, PreCheckoutQuery, LabeledPrice
+from aiogram.types import Message, CallbackQuery, PreCheckoutQuery, LabeledPrice
 from sqlalchemy.ext.asyncio import AsyncSession
 from core.keyboards.donates_author import choice_donate, donate_rubl, payment_rubl, payment_stars, back
 from core.keyboards.back import back_menu
 from core.keyboards.start import main_menu
 from core.states.donate_state import Donate
-from aiogram.filters import Command
+
 
 router = Router()
 

@@ -1,8 +1,8 @@
-from sqlalchemy import Text, BigInteger, String, Boolean
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy import Text, BigInteger, Boolean
+from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy import event
 from .base import Base
-from sqlalchemy.orm import Session
+
 
 class Info_user(Base):
     __tablename__ = "info_user"

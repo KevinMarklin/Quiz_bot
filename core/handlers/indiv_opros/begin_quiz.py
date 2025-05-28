@@ -1,6 +1,5 @@
 from aiogram import types, F, Router, Bot
-from aiogram.fsm.context import FSMContext
-from aiogram.types import ReplyKeyboardRemove
+
 
 router = Router()
 

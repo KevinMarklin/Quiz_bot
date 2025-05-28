@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from core.database.models import Info_user, Quiz_user, Passed_user
-from sqlalchemy import select, update, delete
-from sqlalchemy.orm.attributes import flag_modified
+from sqlalchemy import select
+
 
 async def add_user_profile(session: AsyncSession, data: dict):
     query = select(Info_user.user_id).where(Info_user.user_id == data['user_id'])

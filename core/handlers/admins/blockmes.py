@@ -1,10 +1,8 @@
 import toml
+
 from aiogram import Router, F
-from aiogram.fsm.context import FSMContext
-from aiogram.fsm.state import StatesGroup, State
 from aiogram.types import CallbackQuery, Message
 from aiogram.filters import Command
-from core.states.admin import Admin
 from core.keyboards.ban_messages_user import admin_lock_kb
 from lock_state import is_locked, set_locked
 router = Router()

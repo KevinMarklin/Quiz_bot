@@ -1,18 +1,16 @@
 from aiogram import types, F, Router, Bot
 from aiogram.fsm.context import FSMContext
 from aiogram.types import ReplyKeyboardRemove, CallbackQuery
-import asyncio
+
 from aiogram.filters import Command
 from sqlalchemy.ext.asyncio import AsyncSession
 import re
 from config import FRIEND_TEST
-from core.database.orm_query import look_user_quiz, delete_user_quiz, add_user_answer
+from core.database.orm_query import look_user_quiz, add_user_answer
 from core.keyboards.answer_quiz import send_question
 from core.keyboards.answer_quiz import link_friends
 from core.keyboards.begin_opros import reverse_link_friend_bk
 from core.keyboards.del_quiz import del_quiz
-from core.keyboards.stop_opros import stop_creat_quiz
-from core.keyboards.start import main_menu
 from core.states.quiz import FriendTest
 from core.utils.encryption_id import PollLinkGenerator
 
