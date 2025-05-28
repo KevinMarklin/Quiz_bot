@@ -10,9 +10,10 @@ from core.middlewares.db import DatabaseMiddleware
 from core.handlers import setup_handlers
 from core.database.factory import creat_db, session_maker
 
-print("DEBUG: DATABASE_URL =", os.getenv("DATABASE_URL"))
+
 
 async def main():
+    print("DEBUG: DATABASE_URL =", os.getenv("DATABASE_URL"))
     await creat_db()
     logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(name)s - %(message)s")
     config = Config.from_file("config.toml")
