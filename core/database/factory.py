@@ -4,12 +4,21 @@ from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine, Asyn
 
 from core.database.models import Base
 
+# dsn = os.getenv("DATABASE_URL")
+# if not dsn:
+#     config = toml.load('config.toml')
+#     dsn = config['database']['dsn']
+#
+# # Исправляем postgres:// → postgresql+asyncpg://
+# if dsn.startswith("postgres://"):
+#     dsn = dsn.replace("postgres://", "postgresql+asyncpg://", 1)
+
+
 dsn = os.getenv("DATABASE_URL")
 if not dsn:
-    config = toml.load('config.toml')
-    dsn = config['database']['dsn']
+    raise RuntimeError("DATABASE_URL не установлена в переменных окружения!")
 
-# Исправляем postgres:// → postgresql+asyncpg://
+# Заменяем старый формат на async совместимый
 if dsn.startswith("postgres://"):
     dsn = dsn.replace("postgres://", "postgresql+asyncpg://", 1)
 
