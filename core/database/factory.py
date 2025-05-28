@@ -18,9 +18,11 @@ dsn = os.getenv("DATABASE_URL")
 if not dsn:
     raise RuntimeError(f"DATABASE_URL не установлена в переменных окружения!, {dsn}")
 
-# Заменяем старый формат на async совместимый
+# 🟢 Важно! Заменить префикс на asyncpg
 if dsn.startswith("postgres://"):
     dsn = dsn.replace("postgres://", "postgresql+asyncpg://", 1)
+elif dsn.startswith("postgresql://"):
+    dsn = dsn.replace("postgresql://", "postgresql+asyncpg://", 1)
 
 engine = create_async_engine(dsn, echo=True)
 session_maker = async_sessionmaker(bind=engine, expire_on_commit=False, class_=AsyncSession)
