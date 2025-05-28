@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import os
 
 from aiogram import Bot, Dispatcher
 from aiogram.client.bot import DefaultBotProperties
@@ -9,6 +10,7 @@ from core.middlewares.db import DatabaseMiddleware
 from core.handlers import setup_handlers
 from core.database.factory import creat_db, session_maker
 
+print("DEBUG: DATABASE_URL =", os.getenv("DATABASE_URL"))
 
 async def main():
     await creat_db()
