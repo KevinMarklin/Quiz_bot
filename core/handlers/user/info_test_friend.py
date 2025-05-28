@@ -31,11 +31,16 @@ async def info(message: Message, state: FSMContext, session: AsyncSession):
     else:
         user_result = await result_user_passed(session, user_id)
 
-        result_text = "<b>🌟Друзья, прошедшие твой тест🌟:</b>\n\n"
+        if user_result == False:
+            await message.answer("🌟Твои друзья ещё не прошли твой тест!🌟")
+
+        else:
+
+            result_text = "<b>🌟Друзья, прошедшие твой тест🌟:</b>\n\n"
 
 
-        for idx, (name, score) in enumerate(user_result, start=1):
-            name_display = name.strip() if isinstance(name, str) and name.strip() else "Имя не найдено"
-            result_text += f"{idx}. Друг: @{name_display} — {score}/11\n"
+            for idx, (name, score) in enumerate(user_result, start=1):
+                name_display = name.strip() if isinstance(name, str) and name.strip() else "Имя не найдено"
+                result_text += f"{idx}. Друг: @{name_display}; Результат: {score}/11\n"
 
-        await message.answer(result_text)
+            await message.answer(result_text)

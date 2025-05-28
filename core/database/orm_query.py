@@ -95,10 +95,13 @@ async def result_user_passed(session: AsyncSession, friend_id: int):
             Passed_user.user_name,
             Passed_user.result_user
         )
-        .where(Passed_user.friend_id == friend_id)  # фильтр по friend_id
+        .where(Passed_user.friend_id == friend_id)
     )
     result = await session.execute(query)
-    user_results = result.all()  # список кортежей (user_name, result_user)
+    user_results = result.all()
+
+    if not user_results:
+        return False
     return user_results
 
 # async def add_passed_id_name(session: AsyncSession, data: dict):
