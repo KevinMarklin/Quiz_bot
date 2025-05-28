@@ -1,0 +1,15 @@
+[telegram]
+bot_token = '7188469634:AAEAw8rz5i6rX2tJIZxRnxQjFAa1pjK4Ik4'
+
+
+[database]
+dsn = 'postgresql+asyncpg://bot:bot@localhost:5432/bot'
+
+[payment]
+provider_token = "381764678:TEST:125087"
+test_provider_token = "381764678:TEST:125087"
+
+[support]
+id1 = 6698393526
+id2 = 1201735046
+

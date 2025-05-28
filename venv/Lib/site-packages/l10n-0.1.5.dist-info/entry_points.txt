@@ -1,0 +1,3 @@
+[console_scripts]
+l10n=l10n._cli:entrypoint
+
