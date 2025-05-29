@@ -106,7 +106,7 @@ async def handle_ruble_donation(call: CallbackQuery, state: FSMContext):
         payload='don_rub',
         provider_token=yootoken,
         currency='RUB',
-        start_parameter='test_bot',
+        start_parameter='don_rub',
         prices=[LabeledPrice(label='Руб', amount=amount * 100)],
         need_phone_number=True,
         send_phone_number_to_provider=True,
