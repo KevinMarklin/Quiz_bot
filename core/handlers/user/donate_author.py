@@ -78,25 +78,25 @@ async def handle_ruble_donation(call: CallbackQuery, state: FSMContext):
 
     provider_data = json.dumps({
         "receipt": {
-            "customer": {
-                "email": "",  # Telegram подставит сам, если указан need_email=True
-                "phone": ""  # Telegram тоже подставит
-            },
+            "customer": {},
             "items": [
                 {
                     "description": "Поддержка автора",
-                    "quantity": "1.00",
+                    "quantity": 1.0,
                     "amount": {
                         "value": f"{amount:.2f}",
                         "currency": "RUB"
                     },
-                    "vat_code": 1  # Обычно 1 = без НДС (или "освобожден")
+                    "vat_code": 1
                 }
             ]
         }
     })
 
-    await call.bot.delete_message(call.from_user.id, call.message.message_id)
+    try:
+        await call.bot.delete_message(call.from_user.id, call.message.message_id)
+    except:
+        pass
 
     invoice_rub = await call.bot.send_invoice(
         chat_id=call.from_user.id,
@@ -106,7 +106,7 @@ async def handle_ruble_donation(call: CallbackQuery, state: FSMContext):
         payload='don_rub',
         provider_token=yootoken,
         currency='RUB',
-        start_parameter='don_rub',
+        start_parameter='test_bot',
         prices=[LabeledPrice(label='Руб', amount=amount * 100)],
         need_phone_number=True,
         send_phone_number_to_provider=True,
