@@ -15,7 +15,8 @@ router = Router()
 
 config = toml.load('config.toml')
 SUPPORT_CHAT_ID1 = config['support']['id1']
-yootoken = config['payment']['test_provider_token']
+yootoken = config['payment']['provider_token']
+
 
 
 
@@ -88,6 +89,9 @@ async def handle_ruble_donation(call: CallbackQuery, state: FSMContext):
         currency='RUB',
         start_parameter='test_bot',
         prices=[LabeledPrice(label='Руб', amount=amount * 100)],
+        need_phone_number=True,
+        send_phone_number_to_provider=True,
+        # provider_data=provider_data,
         reply_markup=payment_rubl()
     )
 
