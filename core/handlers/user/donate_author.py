@@ -75,7 +75,9 @@ async def donate_ruble(call: CallbackQuery, state: FSMContext):
 async def handle_ruble_donation(call: CallbackQuery, state: FSMContext):
     match = re.match(r"ruble_(\d+)", call.data)
     amount = int(match.group(1))
+
     await call.bot.delete_message(call.from_user.id, call.message.message_id)
+
     invoice_rub = await call.bot.send_invoice(
         chat_id=call.from_user.id,
         title='💖 Поддержать автора — спасибо, что вы с нами!',
@@ -85,9 +87,10 @@ async def handle_ruble_donation(call: CallbackQuery, state: FSMContext):
         provider_token=yootoken,
         currency='RUB',
         start_parameter='test_bot',
-        prices=[{"label": 'Руб', "amount": amount * 100}],
+        prices=[LabeledPrice(label='Руб', amount=amount * 100)],
         reply_markup=payment_rubl()
     )
+
     await state.update_data(invoice_message_id=invoice_rub.message_id)
     await call.answer()
 
