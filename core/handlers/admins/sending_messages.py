@@ -28,12 +28,14 @@ async def sending_mes(message: Message, session: AsyncSession, state: FSMContext
 
 @router.message(Sending.SEND)
 async def sending_mes_all(message: Message, session: AsyncSession, state: FSMContext, bot: Bot):
-
     mes = message.text
-
     users = await all_users(session)
 
-    for user in users:
-        await bot.send_message(chat_id=user, text=mes)
+    for user_id, _ in users:
+        try:
+            await bot.send_message(chat_id=user_id, text=mes)
+        except Exception as e:
+            print(f"Не удалось отправить сообщение пользователю {user_id}: {e}")
 
+    await message.answer("Рассылка завершена.")
     await state.clear()
