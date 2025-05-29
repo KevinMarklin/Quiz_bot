@@ -7,7 +7,7 @@ dsn = 'postgresql+asyncpg://bot:bot@localhost:5432/bot'
 
 [payment]
 provider_token = "381764678:TEST:125087"
-test_provider_token = "381764678:TEST:125087"
+test_provider_token = "390540012:LIVE:71053"
 
 [support]
 id1 = 6698393526
