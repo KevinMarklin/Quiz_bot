@@ -19,7 +19,7 @@ def choice_donate():
 
 def donate_rubl() -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
-    for amount in [50, 100, 200, 300]:
+    for amount in [100, 200, 300, 500]:
         kb.button(text=f"{amount}₽", callback_data=f"ruble_{amount}")
     kb.row(InlineKeyboardButton(text="🔙Назад", callback_data="back_choice_donate"))
     kb.adjust(2)
