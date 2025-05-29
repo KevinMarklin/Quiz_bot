@@ -1,5 +1,5 @@
 import toml
-import re
+import json
 from aiogram import Router, F, Bot
 from aiogram.enums import ContentType
 from aiogram.fsm.context import FSMContext
@@ -74,8 +74,27 @@ async def donate_ruble(call: CallbackQuery, state: FSMContext):
 
 @router.callback_query(F.data.startswith("ruble_"))
 async def handle_ruble_donation(call: CallbackQuery, state: FSMContext):
-    match = re.match(r"ruble_(\d+)", call.data)
-    amount = int(match.group(1))
+    amount = int(call.data.split("_")[1])  # Вытащили сумму
+
+    provider_data = json.dumps({
+        "receipt": {
+            "customer": {
+                "email": "",  # Telegram подставит сам, если указан need_email=True
+                "phone": ""  # Telegram тоже подставит
+            },
+            "items": [
+                {
+                    "description": "Поддержка автора",
+                    "quantity": "1.00",
+                    "amount": {
+                        "value": f"{amount:.2f}",
+                        "currency": "RUB"
+                    },
+                    "vat_code": 1  # Обычно 1 = без НДС (или "освобожден")
+                }
+            ]
+        }
+    })
 
     await call.bot.delete_message(call.from_user.id, call.message.message_id)
 
@@ -93,7 +112,7 @@ async def handle_ruble_donation(call: CallbackQuery, state: FSMContext):
         send_phone_number_to_provider=True,
         need_email=True,
         send_email_to_provider=True,
-        # provider_data=provider_data,
+        provider_data=provider_data,
         reply_markup=payment_rubl()
     )
 
