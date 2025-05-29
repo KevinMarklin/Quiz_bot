@@ -91,6 +91,8 @@ async def handle_ruble_donation(call: CallbackQuery, state: FSMContext):
         prices=[LabeledPrice(label='Руб', amount=amount * 100)],
         need_phone_number=True,
         send_phone_number_to_provider=True,
+        need_email=True,
+        send_email_to_provider=True,
         # provider_data=provider_data,
         reply_markup=payment_rubl()
     )
