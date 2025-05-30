@@ -35,7 +35,7 @@ class Config:
 FRIEND_TEST = [
     {
         "question": "В каком месяце у тебя день рождения?",
-        "question_for_user": "В каком году у него/неё день рождения",
+        "question_for_user": "В каком месяце у него/неё день рождения",
         "answer_back": "День рождения в ",
         "image_url": "https://static.foxnews.com/foxnews.com/content/uploads/2020/04/iStock-184332537.jpg",
         "answers": [
