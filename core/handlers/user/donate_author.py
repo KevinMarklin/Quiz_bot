@@ -74,11 +74,13 @@ async def donate_ruble(call: CallbackQuery, state: FSMContext):
 
 @router.callback_query(F.data.startswith("ruble_"))
 async def handle_ruble_donation(call: CallbackQuery, state: FSMContext):
-    amount = int(call.data.split("_")[1])  # Вытащили сумму
+    amount = int(call.data.split("_")[1])
 
     provider_data = json.dumps({
         "receipt": {
-            "customer": {},
+            "customer": {
+                "email": "kosy1000@bk.ru"
+            },
             "items": [
                 {
                     "description": "Поддержка автора",
