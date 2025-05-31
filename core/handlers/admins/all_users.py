@@ -28,11 +28,7 @@ async def all_user(message: Message, session: AsyncSession):
         lines.append(f"{i}. 👤 {user_id} — {display_name}")
 
     total = len(users)
-    lines.append(f"\n📊 Всего пользователей: {total}")
-
-    result = "\n".join(lines)
-
-    await message.answer(f"{result}")
+    await message.answer(f"📊 Всего пользователей: {total}")
 
 
 
