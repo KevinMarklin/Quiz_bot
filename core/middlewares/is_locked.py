@@ -18,7 +18,7 @@ class AccessMiddleware(BaseMiddleware):
     ) -> Any:
         user_id = event.from_user.id
 
-        if user_id in ADMIN_IDS:
+        if user_id == ADMIN_IDS:
             return await handler(event, data)
 
         if is_locked():
