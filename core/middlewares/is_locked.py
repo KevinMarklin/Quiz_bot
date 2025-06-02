@@ -5,7 +5,7 @@ from aiogram import BaseMiddleware
 from aiogram.types import Message
 
 config = toml.load("config.toml")
-ADMIN_IDS = [config["support"]["id1"], config["support"]["id2"]]
+ADMIN_IDS = config["support"]["id1"]
 
 
 
