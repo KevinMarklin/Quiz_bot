@@ -105,7 +105,7 @@ async def process_answer(call: CallbackQuery, state: FSMContext, bot: Bot, sessi
         correct_count = 0
         total_questions = len(FRIEND_TEST)
 
-        result_text = f"<b>🎉 Ваш друг {call.from_user.username} прошёл тест!</b>\n\n<b>📋 Результаты:</b>\n\n"
+        result_text = f"<b>🎉 Ваш друг @{call.from_user.username} прошёл тест!</b>\n\n<b>📋 Результаты:</b>\n\n"
 
         for i in range(total_questions):
             question = FRIEND_TEST[i]["question_for_user"]

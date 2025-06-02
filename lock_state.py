@@ -2,7 +2,7 @@ import json
 import os
 
 LOCK_STATE_FILE = "lock_state.json"
-DEFAULT_STATE = {"is_locked": False}
+DEFAULT_STATE = {"is_locked": True}
 
 # Загружаем состояние из файла (или создаём с дефолтом)
 def load_state():
