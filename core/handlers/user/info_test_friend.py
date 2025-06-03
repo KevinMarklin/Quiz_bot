@@ -36,6 +36,6 @@ async def info(message: Message, state: FSMContext, session: AsyncSession):
 
             for idx, (name, score) in enumerate(user_result, start=1):
                 name_display = name.strip() if isinstance(name, str) and name.strip() else "Имя не найдено"
-                result_text += f"{idx}. Друг: @{name_display}; Результат: {score}/11\n"
+                result_text += f"{idx}. @{name_display} - {score}/11\n"
 
             await message.answer(result_text)
