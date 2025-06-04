@@ -1,6 +1,6 @@
 [telegram]
 bot_token = '7188469634:AAEAw8rz5i6rX2tJIZxRnxQjFAa1pjK4Ik4'
-
+#bot_token = '7504698648:AAF8oDU5kplYmxBuTi-KfLJvYQedBX3Jv58'
 
 [database]
 dsn = 'postgresql+asyncpg://bot:bot@localhost:5432/bot'

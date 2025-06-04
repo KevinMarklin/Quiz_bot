@@ -14,7 +14,6 @@ def builds_keyboard(question_index: int, answers: list) -> InlineKeyboardMarkup:
             callback_data=f"answer_{question_index}_{i}"
         )
     builder.adjust(2)
-    builder.row(InlineKeyboardButton(text="🛑 Остановить опрос", callback_data="stop_opros"))
     return builder.as_markup()
 
 

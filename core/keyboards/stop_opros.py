@@ -9,6 +9,14 @@ def stop_creat_quiz() -> ReplyKeyboardMarkup:
     return builder.as_markup(resize_keyboard=True)
 
 
+def stop_creat_opros() -> ReplyKeyboardMarkup:
+    builder = ReplyKeyboardBuilder()
+    builder.row(KeyboardButton(text="Прекратить создание теста❌"))
+
+    return builder.as_markup(resize_keyboard=True)
+
+
+
 def stop_begin_quiz() -> ReplyKeyboardMarkup:
     builder = ReplyKeyboardBuilder()
     builder.row(KeyboardButton(text="❌Прекратить прохождение опроса"))

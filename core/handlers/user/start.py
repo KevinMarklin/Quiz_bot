@@ -1,4 +1,4 @@
-from aiogram import Router, F
+from aiogram import Router, F, Bot
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 from aiogram.filters import Command
@@ -7,10 +7,11 @@ import toml
 
 
 
-from core.database.orm_query import add_user_profile, look_user
+from core.database.orm_query import add_user_profile, look_user, look_user_quiz
 from core.keyboards.begin_opros import begin_opros
-from core.keyboards.start import main_menu
+from core.keyboards.start import main_menu, reverse_link_friend_delete_info_bk
 from core.utils.decoding_id import decrypt_user_id
+from core.utils.encryption_id import PollLinkGenerator
 
 router = Router()
 
@@ -20,7 +21,7 @@ SUPPORT_CHAT_ID2 = config['support']['id2']
 
 
 @router.message(Command("start"))
-async def start(message: Message, state: FSMContext, session: AsyncSession):
+async def start(message: Message, state: FSMContext, session: AsyncSession, bot: Bot):
     await state.clear()
 
     if message.text.startswith(f"/start "):
@@ -43,7 +44,32 @@ async def start(message: Message, state: FSMContext, session: AsyncSession):
         res = await look_user(session, message.from_user.id)
 
         if res:
-            await message.answer("🚀Мы рады, что вы вернулись!",
+
+            quiz = await look_user_quiz(session, message.from_user.id)
+
+            if  quiz == True:
+                bot_user = await bot.get_me()
+                bot_name = bot_user.username
+                link_generator = PollLinkGenerator(bot_name)
+                encrypted_link = link_generator.generate_link(message.from_user.id)
+
+                del_message = await message.answer(f"<b>🙃 У вас уже есть готовый тест.</b> Сейчас ты сможешь только\n"
+                                     " посмотреть результаты теста или же удалить его\n\n"
+
+                                     "🚀 *Ссылка для друзей:*\n"
+                                     f"<code>{encrypted_link}</code>\n\n"
+                                     
+                                     "📱 Отправь ссылку на тест своим друзьям или опубликуй её в\n"
+                                     " профиле Telegram/Instagram/TikTok и других соц. сетей!",
+                                     reply_markup=reverse_link_friend_delete_info_bk(encrypted_link)
+                                     )
+
+                await state.update_data(
+                    del_message_id=del_message.message_id
+                )
+
+            else:
+                await message.answer("🚀Мы рады, что вы вернулись!",
                                  reply_markup=main_menu())
 
         else:

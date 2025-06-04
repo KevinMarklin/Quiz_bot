@@ -10,7 +10,7 @@ from config import FRIEND_TEST
 
 def begin_opros() -> ReplyKeyboardMarkup:
     builder = ReplyKeyboardBuilder()
-    builder.row(KeyboardButton(text="▶️Начать прохождение опроса"))
+    builder.row(KeyboardButton(text="▶️Приступить к прохождению опроса"))
 
     return builder.as_markup(resize_keyboard=True)
 
@@ -23,7 +23,6 @@ def build_keyboard(question_index: int, answers: list) -> InlineKeyboardMarkup:
             callback_data=f"answers_{question_index}_{i}"
         )
     builder.adjust(2)
-    builder.row(InlineKeyboardButton(text="🛑 Остановить опрос", callback_data="stop_test"))
     return builder.as_markup()
 
 

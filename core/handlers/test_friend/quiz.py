@@ -13,7 +13,7 @@ from core.keyboards.begin_opros import reverse_link_friend_bk
 from core.keyboards.del_quiz import del_quiz
 from core.states.quiz import FriendTest
 from core.utils.encryption_id import PollLinkGenerator
-
+from core.keyboards.stop_opros import stop_creat_opros
 router = Router()
 
 
@@ -25,7 +25,7 @@ async def creat_quiz(message: types.Message, state: FSMContext, bot: Bot, sessio
     user_quiz_exists = await look_user_quiz(session, user_id)
     if user_quiz_exists == True:
         del_message = await message.answer("🌟У вас уже есть тест для друга,\n"
-                                           "удалите его, чтобы создать новый!🌟",
+                                           "удалите его, чтобы создать новый!",
                                                  reply_markup=del_quiz())
 
         await state.update_data(
@@ -35,7 +35,7 @@ async def creat_quiz(message: types.Message, state: FSMContext, bot: Bot, sessio
 
 
     intro_msg = await message.answer("😉 Отвечай четсно",
-                                     reply_markup=ReplyKeyboardRemove())
+                                     reply_markup=stop_creat_opros())
 
     await state.set_state(FriendTest.QUIZ)
     await state.update_data(
@@ -121,8 +121,9 @@ async def process_answer(call: CallbackQuery, state: FSMContext, bot: Bot, sessi
                 text=f"🎉 ОПРОС УСПЕШНО ЗАВЕРШЁН! 🎉\n\n"
                      f"━━━━━━━━━━━━━━━━━━━━\n"
                      f"📣 Теперь <b>поделитесь ссылкой</b> с друзьями:\n"
-                     f"«Узнай, на сколько хорошо знают тебя твои друзья»\n\n"
-                     f"🚀 *Ссылка для друзей:*\n"
+                     f"«Узнай, на сколько хорошо знают тебя твои друзья»\n"
+                     f"Распространите ее во всех социальных сетях и раскидайте\n\n"
+                     f"🚀 *Ваша ссылка:*\n"
                      f"<code>{encrypted_link}</code>\n\n"
                      f"🔥 Чем больше участников — тем жарче соревнование!",
                 reply_markup=reverse_link_friend_bk(encrypted_link),
@@ -137,14 +138,14 @@ async def process_answer(call: CallbackQuery, state: FSMContext, bot: Bot, sessi
                 text=f"🎉 ОПРОС УСПЕШНО ЗАВЕРШЁН! 🎉\n\n"
                      f"━━━━━━━━━━━━━━━━━━━━\n"
                      f"📣 Теперь <b>поделитесь ссылкой</b> с друзьями:\n"
-                     f"«Узнай, на сколько хорошо знают тебя твои друзья»\n\n"
-                     f"🚀 *Ссылка для друзей:*\n"
+                     f"«Узнай, на сколько хорошо знают тебя твои друзья.\n"
+                     f"Распространяй её во всех социальных сетях»\n\n"
+                     f"🚀 *Ваша ссылка:*\n"
                      f"<code>{encrypted_link}</code>\n\n"
                      f"🔥 Чем больше участников — тем жарче соревнование!",
-                reply_markup=link_friends(encrypted_link),
+                reply_markup=reverse_link_friend_bk(encrypted_link),
                 parse_mode="HTML"
             )
-
 
 
 

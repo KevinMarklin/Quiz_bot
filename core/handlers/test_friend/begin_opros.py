@@ -13,12 +13,13 @@ from core.keyboards.begin_opros import send_question_for_user
 from core.keyboards.start import main_menu
 from core.states.quiz import BeginFriendTest
 from core.keyboards.reverse_messages import reverse
+from core.keyboards.stop_opros import stop_creat_opros, stop_begin_quiz
 
 
 router = Router()
 
 
-@router.message(F.text == '▶️Начать прохождение опроса')
+@router.message(F.text == '▶️Приступить к прохождению опроса')
 async def creat_quiz(message: types.Message, state: FSMContext, bot: Bot, session: AsyncSession):
     data = await state.get_data()
     friends_id = data.get("id_friends")
@@ -36,7 +37,7 @@ async def creat_quiz(message: types.Message, state: FSMContext, bot: Bot, sessio
 
     else:
         message_intro = await message.answer("Отвечай спокойно, не торопись",
-                                             reply_markup=ReplyKeyboardRemove())
+                                             reply_markup=stop_begin_quiz())
         await state.update_data(
             current_question=0,
             user_answers=[],

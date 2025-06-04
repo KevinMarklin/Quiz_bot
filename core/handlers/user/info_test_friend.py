@@ -1,6 +1,6 @@
 from aiogram import Router, F
 from aiogram.fsm.context import FSMContext
-from aiogram.types import Message
+from aiogram.types import Message, CallbackQuery
 from aiogram.filters import Command
 from sqlalchemy.ext.asyncio import AsyncSession
 from core.database.orm_query import look_user_quiz, result_user_passed
@@ -27,11 +27,11 @@ async def info(message: Message, state: FSMContext, session: AsyncSession):
         user_result = await result_user_passed(session, user_id)
 
         if user_result == False:
-            await message.answer("🌟Твои друзья ещё не прошли твой тест!🌟")
+            await message.answer("🌟Твои друзья ещё не прошли твой тест!")
 
         else:
 
-            result_text = "<b>🌟Друзья, прошедшие твой тест🌟:</b>\n\n"
+            result_text = "<b>🌟Друзья, прошедшие твой тест:</b>\n\n"
 
 
             for idx, (name, score) in enumerate(user_result, start=1):
@@ -39,3 +39,34 @@ async def info(message: Message, state: FSMContext, session: AsyncSession):
                 result_text += f"{idx}. @{name_display} - {score}/11\n"
 
             await message.answer(result_text)
+
+
+@router.callback_query(F.data == "info_test")
+async def info(call: CallbackQuery, state: FSMContext, session: AsyncSession):
+    await state.clear()
+    user_id = call.from_user.id
+
+    user_quiz_exists = await look_user_quiz(session, user_id)
+
+    if user_quiz_exists == False:
+        await call.message.answer("🌟У вас нету, созданного теста на дружбу,\n чтобы получить о нём информацию!🌟",
+                             reply_markup=creat_test_friend())
+
+    else:
+        user_result = await result_user_passed(session, user_id)
+
+        if user_result == False:
+            await call.message.answer("🌟Твои друзья ещё не прошли твой тест!")
+
+        else:
+
+            result_text = "<b>🌟Друзья, прошедшие твой тест:</b>\n\n"
+
+
+            for idx, (name, score) in enumerate(user_result, start=1):
+                name_display = name.strip() if isinstance(name, str) and name.strip() else "Имя не найдено"
+                result_text += f"{idx}. @{name_display} - {score}/11\n"
+
+            await call.message.answer(result_text)
+
+    await call.answer()
