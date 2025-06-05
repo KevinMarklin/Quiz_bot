@@ -46,42 +46,29 @@ async def info(message: Message, state: FSMContext, session: AsyncSession):
 @router.callback_query(F.data == "info_test")
 async def info(call: CallbackQuery, state: FSMContext, session: AsyncSession):
     await state.clear()
-    user_id = call.from_user.id
 
-    data = await state.get_data()
-    del_message_opros_id = data.get("del_message_id")
-
-    user_quiz_exists = await look_user_quiz(session, user_id)
+    user_quiz_exists = await look_user_quiz(session, call.from_user.id)
 
     if user_quiz_exists == False:
 
-        await call.bot.delete_message(
-            chat_id=user_id,
-            message_id=del_message_opros_id
-        )
+        await call.message.delete()
 
         await call.message.answer("🌟У вас нету, созданного теста на дружбу,\n"
                                   "чтобы получить о нём информацию!",
                                   reply_markup=reverse())
 
     else:
-        user_result = await result_user_passed(session, user_id)
+        user_result = await result_user_passed(session, call.from_user.id)
 
         if user_result == False:
 
-            await call.bot.delete_message(
-                chat_id=user_id,
-                message_id=del_message_opros_id
-            )
+            await call.message.delete()
 
             await call.message.answer("🌟Твои друзья ещё не прошли твой тест!")
 
         else:
 
-            await call.bot.delete_message(
-                chat_id=user_id,
-                message_id=del_message_opros_id
-            )
+            await call.message.delete()
 
             result_text = "<b>🌟Друзья, прошедшие твой тест:</b>\n\n"
 

@@ -14,16 +14,16 @@ router = Router()
 
 @router.callback_query(F.data == "del_quiz")
 async def del_quizez(call: CallbackQuery, session: AsyncSession, bot: Bot, state: FSMContext):
-    data = await state.get_data()
-    del_message_opros_id = data.get("del_message_id")
-    user_id = call.from_user.id
-    if await delete_user_quiz(session, user_id):
-        await call.bot.edit_message_text(
-            chat_id=user_id,
-            message_id=del_message_opros_id,
-            text=f"😉Ваш тест на дружбу удалён\n\n"
-                 f"Нажмите /start чтобы продолжить работу бота",
-        )
+
+    await state.clear()
+    await call.message.delete()
+
+
+    if await delete_user_quiz(session, call.from_user.id):
+
+        await call.message.answer(f"😉Ваш тест на дружбу удалён",
+                                  reply_markup=main_menu())
+
     else:
         await call.message.answer("Опрос не найден или произошла ошибка.")
 
