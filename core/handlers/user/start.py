@@ -54,7 +54,7 @@ async def start(message: Message, state: FSMContext, session: AsyncSession, bot:
                 encrypted_link = link_generator.generate_link(message.from_user.id)
 
                 del_message = await message.answer(f"<b>🙃 У вас уже есть готовый тест.</b> Сейчас ты сможешь только\n"
-                                     " посмотреть результаты теста или же удалить его\n\n"
+                                     "посмотреть результаты теста или же удалить его\n\n"
 
                                      "🚀 *Ссылка для друзей:*\n"
                                      f"<code>{encrypted_link}</code>\n\n"

@@ -19,7 +19,7 @@ def reverse_link_friend_delete_info_bk(encrypted_link):
     kb.button(text="📤 Отправить друзьям",
     url=f"https://t.me/share/url?url={encrypted_link}&text=🔥СЕРЬЁЗНЫЙ ВЫЗОВ!🔥\n"
         f"Ты уверен, что знаешь меня на 11/11?")
-    kb.button(text="ℹ️Результаты", callback_data="info_test")
+    kb.button(text="📊Результаты", callback_data="info_test")
     kb.button(text="🗑Удалить тест на дружбу", callback_data="del_quiz")
     kb.adjust(1)
 
