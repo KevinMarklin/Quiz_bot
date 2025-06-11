@@ -9,11 +9,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from core.database.orm_query import look_user_quiz, look_user_answers, add_passed_id_name
 
-from core.keyboards.begin_opros import send_question_for_user
-from core.keyboards.start import main_menu
+
+from core.keyboards.admin.start import main_menu
+from core.keyboards.test_friend.begin_opros import send_question_for_user
+from core.keyboards.test_friend.reverse_messages import reverse
+from core.keyboards.test_friend.stop_opros import stop_begin_quiz
 from core.states.quiz import BeginFriendTest
-from core.keyboards.reverse_messages import reverse
-from core.keyboards.stop_opros import stop_creat_opros, stop_begin_quiz
 
 
 router = Router()
@@ -94,11 +95,9 @@ async def process_answer(call: CallbackQuery, state: FSMContext, bot: Bot, sessi
             except Exception:
                 pass
 
-
         original_data = await look_user_answers(session, friends_id)
-
-        original_data_str = original_data[0]  # Получаем строку из списка
-        original_data_list = re.findall(r'[^\s]+\S*', original_data_str)
+        original_data_str = original_data[0]  # '💂Английский язык|||📖Чтение|||...'
+        correct_answers = original_data_str.split("|||")  # список
 
         await state.clear()
 
@@ -110,7 +109,7 @@ async def process_answer(call: CallbackQuery, state: FSMContext, bot: Bot, sessi
 
         for i in range(total_questions):
             question = FRIEND_TEST[i]["question_for_user"]
-            correct = original_data_list[i]
+            correct = correct_answers[i]
             friend = user_answers[i]
 
             is_correct = (correct == friend)

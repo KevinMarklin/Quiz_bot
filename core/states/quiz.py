@@ -5,3 +5,8 @@ class FriendTest(StatesGroup):
 
 class BeginFriendTest(StatesGroup):
     OPROS = State()
+
+
+class QuizCreator(StatesGroup):
+    selecting_questions = State()
+    taking_quiz = State()

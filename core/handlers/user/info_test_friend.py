@@ -4,8 +4,7 @@ from aiogram.types import Message, CallbackQuery
 from aiogram.filters import Command
 from sqlalchemy.ext.asyncio import AsyncSession
 from core.database.orm_query import look_user_quiz, result_user_passed
-
-from core.keyboards.reverse_messages import creat_test_friend, reverse
+from core.keyboards.test_friend.reverse_messages import reverse
 
 router = Router()
 

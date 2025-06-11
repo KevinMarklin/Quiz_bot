@@ -3,7 +3,7 @@ import toml
 from aiogram import Router, F
 from aiogram.types import CallbackQuery, Message
 from aiogram.filters import Command
-from core.keyboards.ban_messages_user import admin_lock_kb
+from core.keyboards.admin.ban_messages_user import admin_lock_kb
 from lock_state import is_locked, set_locked
 router = Router()
 

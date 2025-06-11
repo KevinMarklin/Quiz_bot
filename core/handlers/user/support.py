@@ -4,7 +4,8 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 from aiogram.filters import Command
 from sqlalchemy.ext.asyncio import AsyncSession
-from core.keyboards.back import back_menu
+
+from core.keyboards.test_friend.back import back_menu
 from core.states.support import Error
 
 router = Router()

@@ -1,4 +1,4 @@
-from aiogram import Router, F, Bot
+from aiogram import Router, F, Bot, types
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 from aiogram.filters import Command
@@ -8,8 +8,10 @@ import toml
 
 
 from core.database.orm_query import add_user_profile, look_user, look_user_quiz
-from core.keyboards.begin_opros import begin_opros
-from core.keyboards.start import main_menu, reverse_link_friend_delete_info_bk
+from core.keyboards.admin.intermediate_choice import choice_test
+from core.keyboards.admin.start import main_menu, reverse_link_friend_delete_info_bk
+from core.keyboards.test_friend.begin_opros import begin_opros
+from core.keyboards.test_friend.del_quiz import del_quiz
 from core.utils.decoding_id import decrypt_user_id
 from core.utils.encryption_id import PollLinkGenerator
 
@@ -102,3 +104,30 @@ async def menu(message: Message, state: FSMContext, session: AsyncSession):
     await state.clear()
     await message.answer('🚀Возвращаемся к истокам!',
                          reply_markup=main_menu())
+
+
+
+
+# @router.message(F.text == '📚Создать тест на дружбу')
+# @router.message(Command('create_quiz'))
+# async def creat_quiz(message: types.Message, state: FSMContext, bot: Bot, session: AsyncSession):
+#     user_id = message.from_user.id
+#
+#     user_quiz_exists = await look_user_quiz(session, user_id)
+#     if user_quiz_exists == True:
+#         del_message = await message.answer("🌟У вас уже есть тест для друга,\n"
+#                                            "удалите его, чтобы создать новый!",
+#                                            reply_markup=del_quiz())
+#
+#         await state.update_data(
+#             del_message_id=del_message.message_id
+#         )
+#         return
+#
+#
+#     await message.answer('🌟Выбери стиль теста🌟\n\n'
+#                          '1️⃣ *Классический*\n'
+#                          'Готовый набор вопросов - проверь, насколько друг тебя знает\n\n'
+#                          '2️⃣ *Индивидуальный*\n'
+#                          'Собери свой уникальный тест: выбери вопросы из нашей базы!',
+#                          reply_markup=choice_test())

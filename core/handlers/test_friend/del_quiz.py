@@ -5,7 +5,7 @@ from aiogram.types import CallbackQuery
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core.database.orm_query import delete_user_quiz
-from core.keyboards.start import main_menu
+from core.keyboards.admin.start import main_menu
 
 
 router = Router()

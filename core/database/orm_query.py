@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from core.database.models import Info_user, Quiz_user, Passed_user
 from sqlalchemy import select
-
+from sqlalchemy import delete
 
 async def add_user_profile(session: AsyncSession, data: dict):
     query = select(Info_user.user_id).where(Info_user.user_id == data['user_id'])
@@ -173,3 +173,15 @@ async def add_passed_id_name(session: AsyncSession, data: dict):
         )
         session.add(new_user)
         await session.commit()
+
+
+async def clear_quiz_user_table(session: AsyncSession):
+    query = delete(Quiz_user)  # формируем запрос на удаление всех записей
+    await session.execute(query)
+    await session.commit()
+
+
+async def clear_passed_user_table(session: AsyncSession):
+    query = delete(Passed_user)  # формируем запрос на удаление всех записей
+    await session.execute(query)
+    await session.commit()

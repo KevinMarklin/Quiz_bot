@@ -1,24 +1,25 @@
 from aiogram import types, F, Router, Bot
 from aiogram.fsm.context import FSMContext
-from aiogram.types import ReplyKeyboardRemove, CallbackQuery
+from aiogram.types import CallbackQuery
 
-from aiogram.filters import Command
+
 from sqlalchemy.ext.asyncio import AsyncSession
-import re
+
 from config import FRIEND_TEST
 from core.database.orm_query import look_user_quiz, add_user_answer
-from core.keyboards.answer_quiz import send_question
-from core.keyboards.answer_quiz import link_friends
-from core.keyboards.begin_opros import reverse_link_friend_bk
-from core.keyboards.del_quiz import del_quiz
+from core.keyboards.test_friend.answer_quiz import send_question
+from core.keyboards.test_friend.begin_opros import reverse_link_friend_bk
+from core.keyboards.test_friend.del_quiz import del_quiz
+from core.keyboards.test_friend.stop_opros import stop_creat_opros
+
 from core.states.quiz import FriendTest
 from core.utils.encryption_id import PollLinkGenerator
-from core.keyboards.stop_opros import stop_creat_opros
+
+
 router = Router()
 
 
 @router.message(F.text == '📚Создать тест на дружбу')
-@router.message(Command('create_quiz'))
 async def creat_quiz(message: types.Message, state: FSMContext, bot: Bot, session: AsyncSession):
     user_id = message.from_user.id
 
@@ -91,28 +92,16 @@ async def process_answer(call: CallbackQuery, state: FSMContext, bot: Bot, sessi
                 pass
 
         # Отправляем результаты отдельным сообщением
-        summary = "\n".join(
-            f"{FRIEND_TEST[i]['question_for_user']}: {ans}" for i, ans in enumerate(user_answers)
-        )
+
         await state.clear()
 
-        ser_answers_only = " ".join(re.findall(r":\s*(.*?)(?:\n|$)", summary))
+        ser_answers_only = "|||".join(user_answers)
         await add_user_answer(session, ser_answers_only, user_id, user_name)
 
         bot_user = await bot.get_me()
         bot_name = bot_user.username
         link_generator = PollLinkGenerator(bot_name)
         encrypted_link = link_generator.generate_link(user_id)
-
-        # await bot.send_message(
-        #     chat_id=user_id,
-        #     text=f"🎉 *ОПРОС УСПЕШНО ЗАВЕРШЁН!* 🎉\n\n"
-        #          f"━━━━━━━━━━━━━━━━━━━━\n"
-        #          f"📣 Теперь <b>поделитесь ссылкой</b> с друзьями:\n"
-        #          f"«Пусть они тоже испытают этот крутой вызов!»\n\n"
-        #          f"🚀 Ссылка для друзей:\n"
-        #          f"{encrypted_link}"
-        # )
 
         if reverse_test_friend == True:
 

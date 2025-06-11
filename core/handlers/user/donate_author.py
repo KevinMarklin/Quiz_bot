@@ -1,13 +1,13 @@
 import toml
 import json
-from aiogram import Router, F, Bot
+from aiogram import Router, F
 from aiogram.enums import ContentType
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, CallbackQuery, PreCheckoutQuery, LabeledPrice
 from sqlalchemy.ext.asyncio import AsyncSession
-from core.keyboards.donates_author import choice_donate, donate_rubl, payment_rubl, payment_stars, back
-from core.keyboards.back import back_menu
-from core.keyboards.start import main_menu
+from core.keyboards.admin.donates_author import choice_donate, donate_rubl, payment_rubl, payment_stars, back
+from core.keyboards.admin.start import main_menu
+from core.keyboards.test_friend.back import back_menu
 from core.states.donate_state import Donate
 
 
