@@ -11,7 +11,7 @@ from core.keyboards.admin.del_quiz_passed import del_q_p
 router = Router()
 
 config = toml.load('config.toml')
-ADMIN_IDS = config['support']['id1']
+ADMIN_IDS = [config["support"]["id1"]]
 
 
 @router.message(Command("del_quiz_passed"))
