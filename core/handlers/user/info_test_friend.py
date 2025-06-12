@@ -18,7 +18,9 @@ async def info(message: Message, state: FSMContext, session: AsyncSession):
     user_quiz_exists = await look_user_quiz(session, user_id)
 
     if user_quiz_exists == False:
-        await message.answer("🌟У вас нету, созданного теста на дружбу,\n чтобы получить о нём информацию!",
+        await message.answer("Информация о тесте на дружбу,\n"
+                             "появится здесь, как только вы его создадите.\n"
+                             "Начните прямо сейчас – это увлекательно! ✨",
                              reply_markup=reverse())
 
     else:

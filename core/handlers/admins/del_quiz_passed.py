@@ -33,9 +33,10 @@ async def del_quizez(call: CallbackQuery, session: AsyncSession, bot: Bot, state
 
     try:
         await clear_quiz_user_table(session)
-        await call.message.answer("Успешно удалено")
     except Exception as e:
         await call.message.answer(f"Ошибка {e}")
+
+    await call.message.answer("Успешно удалено")
     await call.answer()
 
 
@@ -46,7 +47,8 @@ async def del_quizez(call: CallbackQuery, session: AsyncSession, bot: Bot, state
 
     try:
         await clear_passed_user_table(session)
-        await call.message.answer("Успешно удалено")
     except Exception as e:
         await call.message.answer(f"Ошибка {e}")
+
+    await call.message.answer("Успешно удалено")
     await call.answer()
