@@ -9,19 +9,25 @@ from config import Config
 from core.middlewares.db import DatabaseMiddleware
 from core.handlers import setup_handlers
 from core.database.factory import creat_db, session_maker
-
-
+from alembic import command
+from alembic.config import Config
+def run_migrations():
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    alembic_cfg = Config(os.path.join(base_dir, "alembic.ini"))
+    command.upgrade(alembic_cfg, "head")
 
 async def main():
+    run_migrations()
+
     print("DEBUG: DATABASE_URL =", os.getenv("DATABASE_URL"))
+
     await creat_db()
+
     logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(name)s - %(message)s")
     config = Config.from_file("config.toml")
 
     dp = Dispatcher()
-
     dp.update.middleware(DatabaseMiddleware(session_pool=session_maker))
-
 
     setup_handlers(dp)
     dp.message.middleware(AccessMiddleware())
