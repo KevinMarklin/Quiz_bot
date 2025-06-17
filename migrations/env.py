@@ -8,15 +8,15 @@ from core.database.models.user import Info_user  # noqa
 from core.database.models.base import Base
 
 
-import toml
-configs = toml.load("config.toml")
-dsn = configs["database"]["dsn"]
+# import toml
+# configs = toml.load("config.toml")
+# dsn = configs["database"]["dsn"]
 
 
 # === Чтение переменной окружения DATABASE_URL ===
-# dsn = os.getenv("DATABASE_URL")
-# if not dsn:
-#     raise RuntimeError("DATABASE_URL не установлена в переменных окружения!")
+dsn = os.getenv("DATABASE_URL")
+if not dsn:
+    raise RuntimeError("DATABASE_URL не установлена в переменных окружения!")
 
 # === Приведение к синхронному виду (для Alembic) ===
 if dsn.startswith("postgres://"):
