@@ -36,13 +36,16 @@ def upgrade() -> None:
             sa.Column('result_user', sa.BigInteger(), nullable=True),
             sa.PrimaryKeyConstraint('id')
         )
-    op.drop_table('opros_user')
-    op.drop_constraint('quiz_user_user_id_fkey', 'quiz_user', type_='foreignkey')
-    op.drop_column('quiz_user', 'id_users_passed')
-    op.drop_column('quiz_user', 'results_users_passed')
-    op.drop_column('quiz_user', 'permission')
-    op.drop_column('quiz_user', 'questions_opros')
-    op.drop_column('quiz_user', 'name_users_passed')
+    conn = op.get_bind()
+    exists = conn.execute(text("SELECT to_regclass('public.opros_user')")).scalar()
+    if exists:
+        op.drop_table('opros_user')
+        op.drop_constraint('quiz_user_user_id_fkey', 'quiz_user', type_='foreignkey')
+        op.drop_column('quiz_user', 'id_users_passed')
+        op.drop_column('quiz_user', 'results_users_passed')
+        op.drop_column('quiz_user', 'permission')
+        op.drop_column('quiz_user', 'questions_opros')
+        op.drop_column('quiz_user', 'name_users_passed')
     # ### end Alembic commands ###
 
 
