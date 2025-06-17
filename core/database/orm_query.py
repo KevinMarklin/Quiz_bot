@@ -38,13 +38,41 @@ async def add_user_quiestion(session: AsyncSession, answer: str, user_id: int, u
 
 
 
-async def look_user_quiz(session: AsyncSession, user_id: int):
-    quiz_answer = select(Quiz_user.user_id).where(Quiz_user.user_id == user_id)
-    result = await session.execute(quiz_answer)
+
+async def look_user_quiz(session: AsyncSession, user_id: int, test_owner_id: int):
+    # Получаем id_quiz для пользователя, проходящего тест
+    stmt = select(Quiz_user.id_quiz).where(Quiz_user.user_id == user_id)
+    result = await session.execute(stmt)
+    id_quiz = result.scalar()
+
+    # Проверяем, является ли пользователь владельцем теста
+    is_owner = user_id == test_owner_id
+
+    if id_quiz is None:
+        return "classik + tru" if is_owner else "classik"
+    else:
+        return "indiv + tru" if is_owner else "indiv"
+
+
+
+async def look_quiz(session: AsyncSession, user_id: int):
+    quiz = select(Quiz_user.user_id).where(Quiz_user.user_id == user_id)
+    result = await session.execute(quiz)
     if result.first() is None:
         return False
     else:
         return True
+
+
+async def select_quiz_id(session: AsyncSession, user_id: int):
+    quiz_id = select(Quiz_user.id_quiz).where(Quiz_user.user_id == user_id)
+    result = await session.execute(quiz_id)
+    id = result.scalars().all()
+    return id
+
+
+
+
 
 async def look_user(session: AsyncSession, user_id: int):
     user_id = select(Info_user.user_id).where(Info_user.user_id == user_id)
@@ -93,7 +121,8 @@ async def result_user_passed(session: AsyncSession, friend_id: int):
     query = (
         select(
             Passed_user.user_name,
-            Passed_user.result_user
+            Passed_user.result_user,
+            Passed_user.len_quiz
         )
         .where(Passed_user.friend_id == friend_id)
     )
@@ -169,7 +198,8 @@ async def add_passed_id_name(session: AsyncSession, data: dict):
             friend_id=data["friend_id"],
             user_id=data["user_id_passed"],
             user_name=user_name_passed,
-            result_user=data["total_questions"]
+            result_user=data["total_questions"],
+            len_quiz=data["len_quiz"]
         )
         session.add(new_user)
         await session.commit()
@@ -185,3 +215,27 @@ async def clear_passed_user_table(session: AsyncSession):
     query = delete(Passed_user)  # формируем запрос на удаление всех записей
     await session.execute(query)
     await session.commit()
+
+async def add_user_answer_indiv(session: AsyncSession, answer: str, user_id: int, user_name: str, quiz_id: str):
+    obj = Quiz_user(
+        answer_opros=answer,
+        user_id=user_id,
+        user_name=user_name,
+        id_quiz=quiz_id
+    )
+    session.add(obj)
+    await session.commit()
+
+
+
+
+
+# async def look_quiz_id(session: AsyncSession, user_id: int):
+#     user_id = select(Quiz_user.user_id).where(Quiz_user.user_id == user_id)
+#     result = await session.execute(user_id)
+#     if result.first() is None:
+#         return False
+#     else:
+#         return True
+#
+

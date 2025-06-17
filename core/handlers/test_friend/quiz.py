@@ -6,10 +6,9 @@ from aiogram.types import CallbackQuery
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from config import FRIEND_TEST
-from core.database.orm_query import look_user_quiz, add_user_answer
+from core.database.orm_query import add_user_answer
 from core.keyboards.test_friend.answer_quiz import send_question
 from core.keyboards.test_friend.begin_opros import reverse_link_friend_bk
-from core.keyboards.test_friend.del_quiz import del_quiz
 from core.keyboards.test_friend.stop_opros import stop_creat_opros
 
 from core.states.quiz import FriendTest
@@ -19,23 +18,14 @@ from core.utils.encryption_id import PollLinkGenerator
 router = Router()
 
 
-@router.message(F.text == '📚Создать тест на дружбу')
-async def creat_quiz(message: types.Message, state: FSMContext, bot: Bot, session: AsyncSession):
-    user_id = message.from_user.id
+@router.message(F.text == '🎯Классический тест')
+async def creat_quiz(message: types.Message, state: FSMContext, bot: Bot):
+    data = await state.get_data()
+    mes_choice = data.get("choice_mes_test")
 
-    user_quiz_exists = await look_user_quiz(session, user_id)
-    if user_quiz_exists == True:
-        del_message = await message.answer("🌟У вас уже есть тест для друга,\n"
-                                           "удалите его, чтобы создать новый!",
-                                                 reply_markup=del_quiz())
+    await bot.delete_message(chat_id=message.chat.id, message_id=mes_choice)
 
-        await state.update_data(
-            del_message_id=del_message.message_id
-        )
-        return
-
-
-    intro_msg = await message.answer("😉 Отвечай четсно",
+    intro_msg = await message.answer("<b>Будь честен с собой и с друзьями.</b>",
                                      reply_markup=stop_creat_opros())
 
     await state.set_state(FriendTest.QUIZ)

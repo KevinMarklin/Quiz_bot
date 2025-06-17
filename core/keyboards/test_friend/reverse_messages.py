@@ -6,6 +6,7 @@ from aiogram.utils.keyboard import ReplyKeyboardBuilder, InlineKeyboardBuilder
 def reverse() -> ReplyKeyboardMarkup:
     builder = ReplyKeyboardBuilder()
     builder.row(KeyboardButton(text="📚Создать тест на дружбу"))
+    builder.row(KeyboardButton(text="🔙Вернуться к меню"))
     return builder.as_markup(resize_keyboard=True)
 
 

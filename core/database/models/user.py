@@ -19,6 +19,7 @@ class Quiz_user(Base):
     user_id: Mapped[int] = mapped_column(BigInteger, nullable=True)
     user_name: Mapped[str] = mapped_column(Text, nullable=True)
     answer_opros: Mapped[str] = mapped_column(Text, nullable=True)
+    id_quiz: Mapped[str] = mapped_column(Text, nullable=True)
 
 
 
@@ -31,6 +32,7 @@ class Passed_user(Base):
     user_id: Mapped[int] = mapped_column(BigInteger, nullable=True)
     user_name: Mapped[str] = mapped_column(Text, nullable=True)
     result_user: Mapped[int] = mapped_column(BigInteger, nullable=True)
+    len_quiz: Mapped[int] = mapped_column(BigInteger, nullable=True)
 
 
 

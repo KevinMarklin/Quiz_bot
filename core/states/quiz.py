@@ -10,3 +10,7 @@ class BeginFriendTest(StatesGroup):
 class QuizCreator(StatesGroup):
     selecting_questions = State()
     taking_quiz = State()
+
+
+class Indiv_quiz(StatesGroup):
+    BEGIN = State()

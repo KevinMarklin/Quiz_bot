@@ -1,7 +1,6 @@
 
 import os
 
-import toml
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine, AsyncSession
 
 from core.database.models import Base
@@ -9,7 +8,7 @@ from core.database.models import Base
 
 # config = toml.load('config.toml')
 # dsn = config['database']['dsn']
-
+#
 # if dsn.startswith("postgres://"):
 #     dsn = dsn.replace("postgres://", "postgresql+asyncpg://", 1)
 

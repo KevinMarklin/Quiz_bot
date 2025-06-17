@@ -9,16 +9,14 @@ from aiogram import types
 QUESTIONS_PER_PAGE = 5
 QUESTIONS_DB = {q["id"]: q for q in ALL_QUESTIONS_LIST}
 
-def build_selection_keyboard(page: int, selected_ids: list[str]) -> InlineKeyboardMarkup:
+def build_selection_keyboard(page: int, selected_ids: list[str], was_sent_before: bool = False) -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
 
-    # Расчет пагинации
     total_pages = (len(ALL_QUESTIONS_LIST) + QUESTIONS_PER_PAGE - 1) // QUESTIONS_PER_PAGE
     start_offset = page * QUESTIONS_PER_PAGE
     end_offset = start_offset + QUESTIONS_PER_PAGE
     page_questions = ALL_QUESTIONS_LIST[start_offset:end_offset]
 
-    # Кнопки выбора вопросов
     for q in page_questions:
         status = "✅" if q["id"] in selected_ids else "☑️"
         builder.button(
@@ -27,7 +25,6 @@ def build_selection_keyboard(page: int, selected_ids: list[str]) -> InlineKeyboa
         )
     builder.adjust(1)
 
-    # Кнопки пагинации
     pagination_buttons = []
     if page > 0:
         pagination_buttons.append(
@@ -42,11 +39,12 @@ def build_selection_keyboard(page: int, selected_ids: list[str]) -> InlineKeyboa
         )
     builder.row(*pagination_buttons)
 
-    # Кнопки управления
+    # Меняем текст кнопки в зависимости от флага
+    view_button_text = f"{'♻️ Обновить' if was_sent_before else '📝 Показать'} выбранные ({len(selected_ids)})"
     builder.row(
-        types.InlineKeyboardButton(text=f"📝 Показать выбранные ({len(selected_ids)})",
-                                   callback_data=Control(action="view").pack())
+        types.InlineKeyboardButton(text=view_button_text, callback_data=Control(action="view").pack())
     )
+
     builder.row(
         types.InlineKeyboardButton(text="✅ Завершить и начать тест", callback_data=Control(action="finish").pack())
     )

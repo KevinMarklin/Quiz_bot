@@ -1,13 +1,11 @@
 from aiogram import types, F, Router, Bot
-from aiogram.filters import CommandStart
 from aiogram.fsm.context import FSMContext
-from aiogram.enums import ParseMode
 from aiogram.types import ReplyKeyboardRemove
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from config import ALL_QUESTIONS_LIST
 from core.callback_data.test_friend import Paginator, SelectQuestion, Control, QuizAnswer
-from core.database.orm_query import add_user_answer
+from core.database.orm_query import add_user_answer_indiv
 from core.dialogs.opros.creat_test import update_selection_menu
 from core.keyboards.indiv_test_friend.creat_test import build_selection_keyboard, build_quiz_keyboard
 from core.keyboards.test_friend.begin_opros import reverse_link_friend_bk
@@ -22,7 +20,10 @@ QUESTIONS_DB = {q["id"]: q for q in ALL_QUESTIONS_LIST}
 
 @router.message(F.text == '⚒️Индивидуальный тест')
 async def cmd_start(message: types.Message, state: FSMContext, bot: Bot):
-    await state.clear()
+    data = await state.get_data()
+    mes_choice = data.get("choice_mes_test")
+    await bot.delete_message(chat_id=message.chat.id, message_id=mes_choice)
+
 
 # Удаление ненужно Reply клавиатуры
     await bot.send_message(
@@ -32,18 +33,20 @@ async def cmd_start(message: types.Message, state: FSMContext, bot: Bot):
     )
     await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id + 1)
 
+
     await state.set_state(QuizCreator.selecting_questions)
     await state.update_data(selected_ids=[], page=0)
 
     keyboard = build_selection_keyboard(page=0, selected_ids=[])
     await message.answer(
-        "🎨 *Собери уникальный тест!*\n\n"
+        "🎨 <b>Собери уникальный тест!</b>\n\n"
         "Листай вопросы с помощью кнопок «Вперёд ➡️» и «⬅️ Назад»\n"
         "Отмечай понравившиеся(просто нажми на них)\n"
         "Просматривай выбранные вопросы и заверши подбор в любой момент!\n\n"
-        "*Совет:* Выбери 5 - 10 вопросов, которые лучше всего раскроют вашу дружбу!",
+        "<b>Совет:</b> Выбери 5 - 10 вопросов, которые лучше всего раскроют вашу дружбу!",
         reply_markup=keyboard
     )
+
 
 
 
@@ -86,20 +89,29 @@ async def handle_control(callback: types.CallbackQuery, callback_data: Control, 
     data = await state.get_data()
     selected_ids = data.get("selected_ids", [])
     message_to_edit_id = data.get("message_to_edit_id")
+    page = data.get("page", 0)
+    last_selected_text = data.get("last_selected_text")
+    was_sent_before = data.get("was_sent_before", False)
 
     if callback_data.action == "view":
         if not selected_ids:
             await callback.answer("Вы ещё не выбрали ни одного вопроса!", show_alert=True)
             return
 
-
+        # Собираем текст с вопросами
         selected_questions_text = "\n".join(
             f"{index + 1}. {QUESTIONS_DB[q_id]['question']}"
             for index, q_id in enumerate(selected_ids)
         )
 
+        # Если он не изменился — ничего не делаем
+        if selected_questions_text == last_selected_text:
+            await callback.answer("Вы уже видите актуальный список", show_alert=False)
+            return
+
         await callback.answer("Обновляю список вопросов...", show_alert=False)
 
+        # Обновляем сообщение с вопросами
         try:
             if message_to_edit_id:
                 await callback.bot.edit_message_text(
@@ -110,11 +122,27 @@ async def handle_control(callback: types.CallbackQuery, callback_data: Control, 
             else:
                 sent_message = await callback.message.answer(f"Выбранные вопросы:\n{selected_questions_text}")
                 await state.update_data(message_to_edit_id=sent_message.message_id)
-
         except Exception as e:
             print(f"Ошибка при обновлении сообщения: {e}")
             sent_message = await callback.message.answer(f"Выбранные вопросы:\n{selected_questions_text}")
             await state.update_data(message_to_edit_id=sent_message.message_id)
+
+        # Если кнопка уже была добавлена ранее — не обновляем клавиатуру
+        if not was_sent_before:
+            updated_markup = build_selection_keyboard(
+                page=page,
+                selected_ids=selected_ids,
+                was_sent_before=True
+            )
+            await state.update_data(was_sent_before=True, last_selected_text=selected_questions_text)
+
+            try:
+                await callback.message.edit_reply_markup(reply_markup=updated_markup)
+            except Exception as e:
+                print(f"Ошибка при обновлении клавиатуры: {e}")
+        else:
+            # Обновим только last_selected_text, чтобы повторное сравнение работало корректно
+            await state.update_data(last_selected_text=selected_questions_text)
 
     elif callback_data.action == "finish":
         if not selected_ids:
@@ -138,7 +166,7 @@ async def handle_control(callback: types.CallbackQuery, callback_data: Control, 
         question_data = QUESTIONS_DB[first_question_id]
         keyboard = build_quiz_keyboard(first_question_id)
 
-        start_message = await callback.message.answer("Тест начинается!", reply_markup=stop_creat_opros())
+        start_message = await callback.message.answer("<b>Будь честен с собой и с друзьями.</b>", reply_markup=stop_creat_opros())
         await callback.message.answer_photo(
             photo=question_data["image_url"],
             caption=question_data["question"],
@@ -186,11 +214,8 @@ async def handle_quiz_answer(callback: types.CallbackQuery,
     else:
         # Завершаем квиз
         await callback.bot.delete_message(chat_id=callback.message.chat.id, message_id=start_message)
-        await callback.message.answer("🎉 Тест завершен! Спасибо за ваши ответы.",
-                                      reply_markup=ReplyKeyboardRemove())
 
         # Формируем и выводим итоговый список ответов
-        result_text = "<b>Ваши ответы:</b>\n\n"
         for answer_data in user_answers:
             q_id = answer_data['question_id']
             a_text = answer_data['answer']
@@ -198,8 +223,12 @@ async def handle_quiz_answer(callback: types.CallbackQuery,
             all_id.append(str(q_id))
 
         try:
-            result = " ".join(["; ".join(all_id), "; ".join(all_answers)])
-            await add_user_answer(session, result, callback.from_user.id, callback.from_user.username)
+            ser_answers_only = "|||".join(all_answers)
+            ser_quiz_id_only = "|||".join(all_id)
+            await add_user_answer_indiv(session, ser_answers_only,
+                                        callback.from_user.id,
+                                        callback.from_user.username,
+                                        ser_quiz_id_only)
         except Exception as e:
             await callback.message.answer("Произошла ошибка в сохранения ответов. Попробуй повторить снова")
             print(e)
