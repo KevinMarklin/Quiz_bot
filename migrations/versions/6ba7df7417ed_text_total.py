@@ -23,7 +23,7 @@ def upgrade():
         'quiz_user',
         'results_users_passed',
         type_=ARRAY(Text),
-        postgresql_using='results_users_passed::text[]'
+        postgresql_using='ARRAY[results_users_passed::text]'
     )
 
 
