@@ -7,7 +7,8 @@ from config import ALL_QUESTIONS_LIST
 from core.callback_data.test_friend import Paginator, SelectQuestion, Control, QuizAnswer
 from core.database.orm_query import add_user_answer_indiv
 from core.dialogs.opros.creat_test import update_selection_menu
-from core.keyboards.indiv_test_friend.creat_test import build_selection_keyboard, build_quiz_keyboard
+from core.keyboards.indiv_test_friend.creat_test import build_selection_keyboard, build_quiz_keyboard, \
+    reverse_link_friend_indiv_bk
 from core.keyboards.test_friend.begin_opros import reverse_link_friend_bk
 from core.states.quiz import QuizCreator
 from core.keyboards.test_friend.stop_opros import stop_creat_opros
@@ -229,6 +230,7 @@ async def handle_quiz_answer(callback: types.CallbackQuery,
                                         callback.from_user.id,
                                         callback.from_user.username,
                                         ser_quiz_id_only)
+
         except Exception as e:
             await callback.message.answer("Произошла ошибка в сохранения ответов. Попробуй повторить снова")
             print(e)
@@ -245,10 +247,10 @@ async def handle_quiz_answer(callback: types.CallbackQuery,
                  f"📣 Теперь <b>поделитесь ссылкой</b> с друзьями:\n"
                  f"«Узнай, на сколько хорошо знают тебя твои друзья.\n"
                  f"Распространяй её во всех социальных сетях»\n\n"
-                 f"🚀 *Ваша ссылка:*\n"
+                 f"🚀 <b>Ваша ссылка:</b>\n"
                  f"<code>{encrypted_link}</code>\n\n"
                  f"🔥 Чем больше участников — тем жарче соревнование!",
-            reply_markup=reverse_link_friend_bk(encrypted_link),
+            reply_markup=reverse_link_friend_indiv_bk(encrypted_link, len(all_id)),
             parse_mode="HTML"
         )
 

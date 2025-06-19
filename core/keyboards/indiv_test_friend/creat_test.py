@@ -69,10 +69,12 @@ def build_quiz_keyboard(question_id: str) -> InlineKeyboardMarkup:
 
 
 
-
-
-
-
+def reverse_link_friend_indiv_bk(encrypted_link, score):
+    kb = InlineKeyboardBuilder()
+    kb.button(text="📤 Отправить друзьям",
+    url=f"https://t.me/share/url?url={encrypted_link}&text=🔥СЕРЬЁЗНЫЙ ВЫЗОВ!🔥\n"
+        f"Ты уверен, что знаешь меня на {score}/{score}?")
+    return kb.as_markup()
 
 
 

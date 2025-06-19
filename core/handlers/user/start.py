@@ -90,7 +90,7 @@ async def start(message: Message, state: FSMContext, session: AsyncSession, bot:
                 del_message = await message.answer(f"<b>🙃 У вас уже есть готовый тест.</b> Сейчас ты сможешь только\n"
                                      "посмотреть результаты теста или же удалить его\n\n"
 
-                                     "🚀 *Ссылка для друзей:*\n"
+                                     "🚀 <b>Ссылка для друзей:</b>\n"
                                      f"<code>{encrypted_link}</code>\n\n"
                                      
                                      "📱 Отправь ссылку на тест своим друзьям или опубликуй её в\n"
@@ -142,7 +142,7 @@ async def menu(message: Message, state: FSMContext, session: AsyncSession, bot: 
         pass
 
     await state.clear()
-    await message.answer('🚀Возвращаемся к истокам!',
+    await message.answer('🚀 Возвращаемся к истокам!',
                          reply_markup=main_menu())
 
 
@@ -165,9 +165,9 @@ async def creat_quiz(message: types.Message, state: FSMContext, bot: Bot, sessio
 
 
     choice_mes_test = await message.answer('🌟Выбери стиль теста🌟\n\n'
-                         '1️⃣ *Классический*\n'
-                         'Готовый набор вопросов - проверь, насколько друг тебя знает\n\n'
-                         '2️⃣ *Индивидуальный*\n'
+                         '1️⃣ <b>Классический</b>\n'
+                         'Готовый набор вопросов: проверь, насколько друг тебя знает\n\n'
+                         '2️⃣ <b>Индивидуальный</b>\n'
                          'Собери свой уникальный тест: выбери вопросы из нашей базы!',
                          reply_markup=choice_test())
 

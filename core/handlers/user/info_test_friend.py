@@ -27,11 +27,11 @@ async def info(message: Message, state: FSMContext, session: AsyncSession):
         user_result = await result_user_passed(session, user_id)
 
         if user_result == False:
-            await message.answer("🌟Твои друзья ещё не прошли твой тест!")
+            await message.answer("🌟 Твои друзья ещё не прошли твой тест!")
 
         else:
 
-            result_text = "<b>🌟Друзья, прошедшие твой тест:</b>\n\n"
+            result_text = "<b>🌟 Друзья, прошедшие твой тест:</b>\n\n"
 
             for idx, (name, score, len_quiz) in enumerate(user_result, start=1):
                 name_display = name.strip() if isinstance(name, str) and name.strip() else "Имя не найдено"
@@ -69,13 +69,13 @@ async def info(call: CallbackQuery, state: FSMContext, session: AsyncSession):
 
             await call.message.delete()
 
-            await call.message.answer("🌟Твои друзья ещё не прошли твой тест!")
+            await call.message.answer("🌟 Твои друзья ещё не прошли твой тест!")
 
         else:
 
             await call.message.delete()
 
-            result_text = "<b>🌟Друзья, прошедшие твой тест:</b>\n\n"
+            result_text = "<b>🌟 Друзья, прошедшие твой тест:</b>\n\n"
 
             for idx, (name, score, len_quiz) in enumerate(user_result, start=1):
                 name_display = name.strip() if isinstance(name, str) and name.strip() else "Имя не найдено"

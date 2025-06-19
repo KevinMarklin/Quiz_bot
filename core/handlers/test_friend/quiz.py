@@ -119,7 +119,7 @@ async def process_answer(call: CallbackQuery, state: FSMContext, bot: Bot, sessi
                      f"📣 Теперь <b>поделитесь ссылкой</b> с друзьями:\n"
                      f"«Узнай, на сколько хорошо знают тебя твои друзья.\n"
                      f"Распространяй её во всех социальных сетях»\n\n"
-                     f"🚀 *Ваша ссылка:*\n"
+                     f"🚀 <b>Ваша ссылка:</b>\n"
                      f"<code>{encrypted_link}</code>\n\n"
                      f"🔥 Чем больше участников — тем жарче соревнование!",
                 reply_markup=reverse_link_friend_bk(encrypted_link),
