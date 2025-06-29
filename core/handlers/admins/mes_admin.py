@@ -21,6 +21,7 @@ async def sending_mes(message: Message):
     await message.answer('/look_users - Посмотреть всех пользователей\n'
                          '/sending_mes - Отправить рассылку\n'
                          '/ban_message - Заблокировать отпраку сообщений\n'
-                         '/del_quiz_passed - Удалить таблицу с тестами и с passed'
+                         '/del_quiz_passed - Удалить таблицу с тестами и с passed\n'
+                         'mes_user - отправка сообщения по айди'
                          '')
 
