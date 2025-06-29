@@ -19,6 +19,7 @@ async def handle_reply_to_user(message: Message, bot: Bot):
     # 1. Пытаемся найти ID в тексте (в вашем формате)
     text = original.text or ""
     match = re.search(r'id=(\d+)', text)
+    print(match)
     if match:
         target_user_id = int(match.group(1))
     # 2. Пробуем взять ID из forward_from (если сообщение было переслано)
