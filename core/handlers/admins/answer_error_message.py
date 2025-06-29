@@ -11,19 +11,25 @@ ADMIN_IDS = [config["support"]["id1"]]
 
 @router.message(F.reply_to_message)
 async def handle_reply_to_user(message: Message, bot: Bot):
-
-    user_id = message.from_user.id
-    if user_id not in ADMIN_IDS:
+    if message.from_user.id not in ADMIN_IDS:
         return
 
-    original_text = message.reply_to_message.text
+    original = message.reply_to_message
 
-    # Извлекаем ID из оригинального сообщения
-    match = re.search(r'id=(\d+)', original_text)
-
+    # 1. Пытаемся найти ID в тексте (в вашем формате)
+    text = original.text or ""
+    match = re.search(r'id=(\d+)', text)
     if match:
-        user_id = int(match.group(1))  # приводим к int
-        await bot.send_message(user_id, f"💬 Ответ поддержки:\n\n{message.text}")
-        await message.answer("✅ Сообщение отправлено пользователю.")
+        target_user_id = int(match.group(1))
+    # 2. Пробуем взять ID из forward_from (если сообщение было переслано)
+    elif original.forward_from:
+        target_user_id = original.forward_from.id
+    # 3. Или просто из отправителя
+    elif original.from_user:
+        target_user_id = original.from_user.id
     else:
         await message.answer("⚠️ Не удалось определить, кому отправить сообщение (id не найден).")
+        return
+
+    await bot.send_message(target_user_id, f"💬 Ответ поддержки:\n\n{message.text}")
+    await message.answer("✅ Сообщение отправлено пользователю.")
