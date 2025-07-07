@@ -7,7 +7,7 @@ import toml
 
 
 
-from core.database.orm_query import add_user_profile, look_user, look_user_quiz, look_quiz
+from core.database.orm_query import add_user_profile, look_user, look_user_quiz, look_quiz, look_quiz_user
 from core.keyboards.admin.intermediate_choice import choice_test
 from core.keyboards.admin.start import main_menu, reverse_link_friend_delete_info_bk
 from core.keyboards.indiv_test_friend.begin_indiv_opros import begin_opros_indiv
@@ -34,15 +34,17 @@ async def start(message: Message, state: FSMContext, session: AsyncSession, bot:
         if not decrypted_user_id:
             return await message.answer("Ошибка перехода по ссылке, попробуйте снова")
 
-        user_quiz_exists = await look_user_quiz(session, decrypted_user_id, message.from_user.id)
 
-        if not user_quiz_exists:
+        user_quiz_false = await look_quiz_user(session, decrypted_user_id)
+
+        if user_quiz_false == False:
             return await message.answer(
                 "Ой, кажется, тест друга исчез... 🥹\n"
                 "Не беда! Попроси его создать новый — будет ещё интереснее! 💫",
                 reply_markup=ReplyKeyboardRemove()
             )
 
+        user_quiz_exists = await look_user_quiz(session, decrypted_user_id, message.from_user.id)
         await state.update_data(id_friends=decrypted_user_id)
 
         # Выбор по типу теста
