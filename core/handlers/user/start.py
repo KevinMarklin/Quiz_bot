@@ -37,6 +37,8 @@ async def start(message: Message, state: FSMContext, session: AsyncSession, bot:
 
         user_quiz_false = await look_quiz_user(session, decrypted_user_id)
 
+#Должно работаь :)
+
         if user_quiz_false == False:
             return await message.answer(
                 "Ой, кажется, тест друга исчез... 🥹\n"
