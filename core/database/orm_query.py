@@ -40,19 +40,20 @@ async def add_user_quiestion(session: AsyncSession, answer: str, user_id: int, u
 
 
 async def look_user_quiz(session: AsyncSession, user_id: int, test_owner_id: int):
-    # Получаем id_quiz для пользователя, проходящего тест
+    # Получаем запись из Quiz_user
     stmt = select(Quiz_user.id_quiz).where(Quiz_user.user_id == user_id)
     result = await session.execute(stmt)
-    id_quiz = result.scalar()
+    id_quiz = result.scalar_one_or_none()
+
+    if id_quiz is None:
+        return None  # Теста нет совсем
 
     # Проверяем, является ли пользователь владельцем теста
     is_owner = user_id == test_owner_id
 
-    if id_quiz is None:
-        return "classik + tru" if is_owner else "classik"
-    else:
-        return "indiv + tru" if is_owner else "indiv"
-
+    return "classik + tru" if is_owner and id_quiz is None else \
+           "classik" if not is_owner and id_quiz is None else \
+           "indiv + tru" if is_owner else "indiv"
 
 
 async def look_quiz(session: AsyncSession, user_id: int):
