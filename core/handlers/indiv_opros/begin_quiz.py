@@ -167,7 +167,7 @@ async def handle_control(callback: types.CallbackQuery, callback_data: Control, 
         question_data = QUESTIONS_DB[first_question_id]
         keyboard = build_quiz_keyboard(first_question_id)
 
-        start_message = await callback.message.answer("<b>Будь честен с собой и с друзьями.</b>", reply_markup=stop_creat_opros())
+        start_message = await callback.message.answer("<b>Будь честен с собой и с друзьями!</b>", reply_markup=stop_creat_opros())
         await callback.message.answer_photo(
             photo=question_data["image_url"],
             caption=question_data["question"],

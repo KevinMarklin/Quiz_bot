@@ -25,7 +25,7 @@ async def creat_quiz(message: types.Message, state: FSMContext, bot: Bot):
 
     await bot.delete_message(chat_id=message.chat.id, message_id=mes_choice)
 
-    intro_msg = await message.answer("<b>Будь честен с собой и с друзьями.</b>",
+    intro_msg = await message.answer("<b>Будь честен с собой и с друзьями!</b>",
                                      reply_markup=stop_creat_opros())
 
     await state.set_state(FriendTest.QUIZ)

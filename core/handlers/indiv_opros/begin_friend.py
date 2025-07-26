@@ -39,7 +39,7 @@ async def begin_test(message: types.Message, state: FSMContext, bot: Bot, sessio
 
 
 
-    message_intro = await message.answer("<b>Не спеши!</b>", reply_markup=stop_begin_quiz())
+    message_intro = await message.answer("<b>Не спеши! Отвечай внимательно!</b>", reply_markup=stop_begin_quiz())
 
     await state.update_data(
         current_question=0,

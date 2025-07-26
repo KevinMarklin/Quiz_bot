@@ -30,7 +30,7 @@ async def creat_quiz(message: types.Message, state: FSMContext, bot: Bot):
     await bot.delete_message(chat_id=message.chat.id, message_id=one_message)
 
 
-    message_intro = await message.answer("<b>Не спеши!</b>",
+    message_intro = await message.answer("<b>Не спеши! Отвечай внимательно!</b>",
                                          reply_markup=stop_begin_quiz())
     await state.update_data(
         current_question=0,

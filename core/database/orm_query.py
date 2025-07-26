@@ -1,6 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from core.database.models import Info_user, Quiz_user, Passed_user
-from sqlalchemy import select
+from sqlalchemy import select, Result
 from sqlalchemy import delete
 
 async def add_user_profile(session: AsyncSession, data: dict):
@@ -56,11 +56,14 @@ async def look_user_quiz(session: AsyncSession, user_id: int, test_owner_id: int
 
 
 async def look_quiz_user(session: AsyncSession, user_id: int):
-    quiz = select(Quiz_user.id_quiz).where(Quiz_user.user_id == user_id)
-    result = await session.execute(quiz)
-    if result in None:
+    quiz_stmt = select(Quiz_user.id_quiz).where(Quiz_user.user_id == user_id)
+    result: Result = await session.execute(quiz_stmt)
+    quiz_id = result.scalar()  # Получаем один результат или None
+
+    if quiz_id is None:
         return False
 
+    return True
 
 async def look_quiz(session: AsyncSession, user_id: int):
     quiz = select(Quiz_user.user_id).where(Quiz_user.user_id == user_id)
@@ -245,4 +248,18 @@ async def add_user_answer_indiv(session: AsyncSession, answer: str, user_id: int
 #     else:
 #         return True
 #
+
+
+async def del_user_all(session: AsyncSession, user_ids: list[int]):
+    try:
+        await session.execute(delete(Info_user).where(Info_user.user_id.in_(user_ids)))
+        await session.execute(delete(Quiz_user).where(Quiz_user.user_id.in_(user_ids)))
+        await session.execute(delete(Passed_user).where(Passed_user.user_id.in_(user_ids)))
+        await session.commit()
+    except Exception as e:
+        print(f"Ошибка при удалении пользователей: {e}")
+
+
+
+
 

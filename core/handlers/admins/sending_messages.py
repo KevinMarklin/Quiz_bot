@@ -5,7 +5,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 from aiogram.filters import Command
 from sqlalchemy.ext.asyncio import AsyncSession
-from core.database.orm_query import all_users
+from core.database.orm_query import all_users, del_user_all
 from core.states.admin import Sending
 
 router = Router()
@@ -28,6 +28,7 @@ async def sending_mes(message: Message, session: AsyncSession, state: FSMContext
 
 @router.message(Sending.SEND)
 async def sending_mes_all(message: Message, session: AsyncSession, state: FSMContext, bot: Bot):
+    del_user = []
     mes = message.text
     users = await all_users(session)
 
@@ -36,6 +37,9 @@ async def sending_mes_all(message: Message, session: AsyncSession, state: FSMCon
             await bot.send_message(chat_id=user_id, text=mes)
         except Exception as e:
             print(f"Не удалось отправить сообщение пользователю {user_id}: {e}")
+            del_user.append(user_id)
+        if del_user:
+            await del_user_all(session, del_user)
 
     await message.answer("Рассылка завершена.")
     await state.clear()

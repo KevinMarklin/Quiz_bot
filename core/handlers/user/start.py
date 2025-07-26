@@ -53,7 +53,8 @@ async def start(message: Message, state: FSMContext, session: AsyncSession, bot:
         if user_quiz_exists in ["classik", "indiv"]:
             keyboard = begin_opros() if user_quiz_exists == "classik" else begin_opros_indiv()
             msg = await message.answer(
-                '<b>🔥 Внимание! Друг приготовил для вас опрос! 🔥</b>\n'
+                '<b>🔥 Внимание!\n'
+                'Друг приготовил для вас опрос! 🔥</b>\n'
                 'Скорее проверьте, насколько хорошо вы знаете друг друга! 😉\n'
                 'Готовы начать? 🚀',
                 reply_markup=keyboard

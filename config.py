@@ -473,6 +473,37 @@ ALL_QUESTIONS_LIST = [
         "id": "17"
     },
 
+    {
+        "question": "🎂 Любимый твой десерт?",
+        "image_url": "https://avatars.mds.yandex.net/i?id=e453d60a94fa42750b828037b2e123b817d198db-9153855-images-thumbs&n=13",
+        "question_for_user": "🎂 Любимый его/её десерт",
+        "answers": [
+            {"text": "🍦Мороженое"},
+            {"text": "🍬Мармелад"},
+            {"text": "🎂Торт"},
+            {"text": "🍫Шоколад"},
+            {"text": "🍨Суфле"},
+            {"text": "🥧Пирог"},
+            {"text": "🍬Конфеты"},
+
+        ],
+        "id": "18"
+    },
+
+    {
+        "question": "☀️ Любимая погода",
+        "image_url": "https://wallpapers.com/images/hd/marvelous-window-raindrops-love-background-z1g44rat6dhmzc2t.jpg",
+        "question_for_user": "☀️ Любимая его/её погода",
+        "answers": [
+            {"text": "🌧Дождливая"},
+            {"text": "☀️Солнечная"},
+            {"text": "😶‍🌫️Туманная"},
+            {"text": "⛅️Пасмурная"},
+            {"text": "🌨Снегопад"},
+        ],
+        "id": "19"
+    },
+
 
 
 
