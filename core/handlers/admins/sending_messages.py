@@ -36,10 +36,9 @@ async def sending_mes_all(message: Message, session: AsyncSession, state: FSMCon
         try:
             await bot.send_message(chat_id=user_id, text=mes)
         except Exception as e:
-            print(f"Не удалось отправить сообщение пользователю {user_id}: {e}")
             del_user.append(user_id)
         if del_user:
             await del_user_all(session, del_user)
-
-    await message.answer("Рассылка завершена.")
+    del_user = []
+    await message.answer("Рассылка завершена и удаление завершено")
     await state.clear()
