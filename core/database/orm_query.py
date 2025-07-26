@@ -56,14 +56,12 @@ async def look_user_quiz(session: AsyncSession, user_id: int, test_owner_id: int
 
 
 async def look_quiz_user(session: AsyncSession, user_id: int):
-    quiz_stmt = select(Quiz_user.id_quiz).where(Quiz_user.user_id == user_id)
-    result: Result = await session.execute(quiz_stmt)
-    quiz_id = result.scalar()  # Получаем один результат или None
-
-    if quiz_id is None:
+    quiz = select(Quiz_user.user_id).where(Quiz_user.user_id == user_id)
+    result = await session.execute(quiz)
+    if result.first() is None:
         return False
-
-    return True
+    else:
+        return True
 
 async def look_quiz(session: AsyncSession, user_id: int):
     quiz = select(Quiz_user.user_id).where(Quiz_user.user_id == user_id)
