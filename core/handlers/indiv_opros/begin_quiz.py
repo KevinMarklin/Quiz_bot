@@ -9,7 +9,6 @@ from core.database.orm_query import add_user_answer_indiv
 from core.dialogs.opros.creat_test import update_selection_menu
 from core.keyboards.indiv_test_friend.creat_test import build_selection_keyboard, build_quiz_keyboard, \
     reverse_link_friend_indiv_bk
-from core.keyboards.test_friend.begin_opros import reverse_link_friend_bk
 from core.states.quiz import QuizCreator
 from core.keyboards.test_friend.stop_opros import stop_creat_opros
 from core.utils.encryption_id import PollLinkGenerator
@@ -78,7 +77,11 @@ async def handle_question_selection(callback: types.CallbackQuery, callback_data
     if q_id in selected_ids:
         selected_ids.remove(q_id)
     else:
-        selected_ids.append(q_id)
+        if len(selected_ids) < 10:
+            selected_ids.append(q_id)
+        else:
+            await callback.answer("Максимум 10 вопросов!", show_alert=True)
+
 
     await state.update_data(selected_ids=selected_ids)
     await update_selection_menu(callback, state)
