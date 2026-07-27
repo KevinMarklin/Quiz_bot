@@ -1,5 +1,7 @@
 from dataclasses import dataclass
 import toml
+import os
+from dotenv import load_dotenv
 
 
 @dataclass
@@ -12,6 +14,7 @@ class Database:
     dsn: str
 
 
+
 @dataclass
 class Config:
     telegram: Telegram
@@ -19,14 +22,35 @@ class Config:
 
     @classmethod
     def from_file(cls, path: str) -> "Config":
-        config = toml.load(path)
+        # Загружаем .env (если есть)
+        load_dotenv()
+
+        # Загружаем config.toml
+        config_data = toml.load(path)
+
+        # --- Получаем bot_token ---
+        env_token = os.getenv("BOT_TOKEN")
+        if env_token:
+            config_data["telegram"]["bot_token"] = env_token
+
+        bot_token = config_data.get("telegram", {}).get("bot_token")
+        if not bot_token:
+            raise RuntimeError("BOT_TOKEN не найден ни в .env, ни в config.toml")
+
+        # --- Получаем DATABASE_URL ---
+        dsn = os.getenv("DATABASE_URL")
+        if not dsn:
+            raise RuntimeError("DATABASE_URL не установлена в переменных окружения")
+
+        # Преобразуем postgres:// в postgresql+asyncpg://
+        if dsn.startswith("postgres://"):
+            dsn = dsn.replace("postgres://", "postgresql+asyncpg://", 1)
+        elif dsn.startswith("postgresql://"):
+            dsn = dsn.replace("postgresql://", "postgresql+asyncpg://", 1)
+
         return cls(
-            telegram=Telegram(
-                **config["telegram"],
-            ),
-            database=Database(
-                **config["database"]
-            )
+            telegram=Telegram(bot_token=bot_token),
+            database=Database(dsn=dsn),
         )
 
 
