@@ -1,24 +1,30 @@
 import os
-from logging.config import fileConfig
+import sys
+from dotenv import load_dotenv
 
 from sqlalchemy import engine_from_config, pool
 from alembic import context
 
-from core.database.models.user import Info_user  # noqa
+# 1. Загружаем переменные из .env файла
+load_dotenv()
+
+# 2. Добавляем корень проекта в sys.path (чтобы импорты core... работали корректно)
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+# 3. Импортируем базовый класс и ВСЕ модели, чтобы Alembic их увидел
 from core.database.models.base import Base
+from core.database.models.user import Info_user  # noqa: F401
 
+# Если есть другие файлы с моделями (например, quiz.py, stats.py и т.д.), 
+# их ТОЖЕ нужно импортировать здесь, чтобы таблицы попали в autogenerate:
+# from core.database.models.quiz import Quiz  # noqa: F401
 
-# import toml
-# configs = toml.load("config.toml")
-# dsn = configs["database"]["dsn"]
-
-
-# === Чтение переменной окружения DATABASE_URL ===
+# 4. Чтение переменной окружения DATABASE_URL
 dsn = os.getenv("DATABASE_URL")
 if not dsn:
     raise RuntimeError("DATABASE_URL не установлена в переменных окружения!")
 
-# === Приведение к синхронному виду (для Alembic) ===
+# 5. Приведение к синхронному драйверу для Alembic
 if dsn.startswith("postgres://"):
     dsn = dsn.replace("postgres://", "postgresql+psycopg2://", 1)
 elif dsn.startswith("postgresql://"):
@@ -26,17 +32,11 @@ elif dsn.startswith("postgresql://"):
 elif "asyncpg" in dsn:
     dsn = dsn.replace("postgresql+asyncpg://", "postgresql+psycopg2://", 1)
 
-# === Alembic config ===
+# Передаем итоговый dsn в конфигурацию Alembic
 config = context.config
-
-# Настройка логов
-if config.config_file_name is not None:
-    fileConfig(config.config_file_name)
-
-# Установка DSN в конфигурацию Alembic
 config.set_main_option("sqlalchemy.url", dsn)
 
-# Метаданные
+# Связываем метаданные SQLAlchemy для автогенерации
 target_metadata = Base.metadata
 
 # === OFFLINE mode ===
