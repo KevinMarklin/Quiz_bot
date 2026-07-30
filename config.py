@@ -14,7 +14,6 @@ class Database:
     dsn: str
 
 
-
 @dataclass
 class Config:
     telegram: Telegram
@@ -25,12 +24,16 @@ class Config:
         # Загружаем .env (если есть)
         load_dotenv()
 
-        # Загружаем config.toml
-        config_data = toml.load(path)
+        # Загружаем config.toml (если файл существует)
+        config_data = {}
+        if os.path.exists(path):
+            config_data = toml.load(path)
 
         # --- Получаем bot_token ---
         env_token = os.getenv("BOT_TOKEN")
         if env_token:
+            if "telegram" not in config_data:
+                config_data["telegram"] = {}
             config_data["telegram"]["bot_token"] = env_token
 
         bot_token = config_data.get("telegram", {}).get("bot_token")
@@ -38,15 +41,24 @@ class Config:
             raise RuntimeError("BOT_TOKEN не найден ни в .env, ни в config.toml")
 
         # --- Получаем DATABASE_URL ---
+        # 1. Проверяем переменные окружения (.env)
         dsn = os.getenv("DATABASE_URL")
-        if not dsn:
-            raise RuntimeError("DATABASE_URL не установлена в переменных окружения")
 
-        # Преобразуем postgres:// в postgresql+asyncpg://
+        # 2. Если в .env пусто, берем из config.toml
+        if not dsn or dsn.strip() == "":
+            dsn = config_data.get("database", {}).get("dsn", "")
+
+        # 3. Если и там пусто, используем дефолтный хост 'db' для Docker Compose
+        if not dsn or dsn.strip() == "":
+            dsn = "postgresql+asyncpg://bot:bot@db:5432/bot"
+
+        # Преобразуем префиксы в асинхронный asyncpg драйвер
         if dsn.startswith("postgres://"):
             dsn = dsn.replace("postgres://", "postgresql+asyncpg://", 1)
         elif dsn.startswith("postgresql://"):
             dsn = dsn.replace("postgresql://", "postgresql+asyncpg://", 1)
+        elif "psycopg2" in dsn:
+            dsn = dsn.replace("postgresql+psycopg2://", "postgresql+asyncpg://", 1)
 
         return cls(
             telegram=Telegram(bot_token=bot_token),
